@@ -78,7 +78,6 @@ ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/qq_all.tiff", 
 
 # RESIDUALS Figure 5 paper (sample is used) -----------------------------------
 
-# FIX: better axis.
 
 # plot of fitted vs residuals: Remake as a ggplot or with neater 
 plot(fitted(nlme_neg2), resid(nlme_neg2), pch=20); abline(h=0, col="red", lwd = 2) # Works fine.
@@ -215,8 +214,8 @@ plyr::ddply(all_out_nlme, c("PARITY", "PCR"), summarise,
                median = median(d),
                sd   = sd(d),
                se   = sd / sqrt(N),
-               lower = mean - qt(1 - (0.05 / 2), n - 1) * se,
-               upper = mean + qt(1 - (0.05 / 2), n - 1) * se)
+               lower = mean - qt(1 - (0.05 / 2), N - 1) * se,
+               upper = mean + qt(1 - (0.05 / 2), N - 1) * se)
 
 
 

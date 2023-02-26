@@ -75,11 +75,18 @@ all_out_nlme %>%
   summarize(median = median(b),
             mean = mean(b))
 
+# table 2 - summary of the parameters
 all_out_nlme %>%
-  filter(PARITY == 2) %>%
+  filter(PARITY == 1) %>%
   filter(PCR == 'NEG') %>%
-  summarize(median = median(b),
-            mean = mean(b))
+  summarize(median = median(d),
+            mean = mean(d),
+            SD = sd(d),
+            SE = SD / sqrt(length(d)),
+            Lower = mean - qt(1 - (0.05 / 2), length(d) - 1) * SE,
+            Upper = mean + qt(1 - (0.05 / 2), length(d) - 1) * SE)
+
+
 
 # unique animals:
 str(df1_neg)
@@ -173,23 +180,23 @@ ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/gg_neg2.tiff", widt
 # re-transform logSCC to SCC
 # calculate manuel dΔlogSCC from DIM 100-150 (/50)
 
-min_pos3 <-
-nlme_out_pos3 %>% 
-  summarise(across(everything(), mean)) %>% 
-  #' join parameters with x-axis (`DIM`)
-  crossing(DIM = seq_len(305)) %>% 
-  #' calculate the proper `logSCC`
-  mutate(logSCC = pmap_dbl(select(., DIM, a,b,k,d), f_wilmink)) %>% 
-  
-  # identity{} : min SCC, DIM at 100, DIM at 150
-  identity() %>% {
-    bind_rows(
-      slice_min(., logSCC, n = 1),
-      filter(., DIM == 100),
-      filter(., DIM == 150)
-    )
-  } %>%
-  mutate(SCC = exp(logSCC)) 
+min_neg2 <- 
+  nlme_out_neg2 %>% 
+    summarise(across(everything(), mean)) %>% 
+    #' join parameters with x-axis (`DIM`)
+    crossing(DIM = seq_len(305)) %>% 
+    #' calculate the proper `logSCC`
+    mutate(logSCC = pmap_dbl(select(., DIM, a,b,k,d), f_wilmink)) %>% 
+    
+    # identity{} : min SCC, DIM at 100, DIM at 150
+    identity() %>% {
+      bind_rows(
+        slice_min(., logSCC, n = 1),
+        filter(., DIM == 100),
+        filter(., DIM == 150)
+      )
+    } %>%
+    mutate(SCC = exp(logSCC)) 
 
 # minSCC, minlogSCC and DIM at minimum retrieved from table
 # delta logSCC calculated using th 100 and 150 DIM logSCC value
