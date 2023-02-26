@@ -43,22 +43,22 @@ load("K:/paperI/major4/VII_deliverance.RData") # only model output and grouped d
 # Use the qq quantile plot...
 
 
-# qq1, qq2, qq3: neg2, neg3, neg4 #F8766D
-# qq4, qq5, qq6: pos2, pos3, pos4 #00BFC4
-qq3 <- ggqqplot(residuals(nlme_neg4), shape=1, 
-              xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", title = "Parity > 3, negative", 
+# NEGATIVE: #F8766D
+# POSITIVE #00BFC4
+qq_pos1 <- ggqqplot(residuals(nlme_pos1), shape=1, 
+              xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", title = "Parity 1, positive", 
               font.x = c(14), font.y = c(14), 
-              color = "#F8766D")
-qq3$layers[[2]]$aes_params$colour <- "black" 
-qq3
+              color = "#00BFC4")
+qq_pos1$layers[[2]]$aes_params$colour <- "black" 
+#qq_neg3
 
-qq_all <- ggarrange(qq1, qq4, qq2, qq5, qq3, qq6, 
-                    ncol=2, nrow=3, 
+qq_all <- ggarrange(qq_neg1, qq_pos1, qq_neg2, qq_pos2, qq_neg3, qq_pos3, qq_neg4, qq_pos4, 
+                    ncol=2, nrow=4, 
                     common.legend = TRUE, legend="right")
 qq_all
 
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/new_qq_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/qq_all.pdf")
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/qq_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
+#ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/qq_all.pdf")
 #ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/qq_neg2.tiff", width = 40, height = 40, units = "cm", dpi=300)
 #ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/qq_neg2.pdf")
 
@@ -85,31 +85,33 @@ plot(fitted(nlme_neg2), resid(nlme_neg2), pch=20); abline(h=0, col="red", lwd = 
 
 # test with ggplot... Only a part of the data
 library(broom.mixed)
-broom::augment(nlme_neg4, data = df4_neg) -> 
-  aug_nlme_neg4
+broom::augment(nlme_pos4, data = df4_pos) -> 
+  aug_nlme_pos4
 
 
 # gg residuals plot with a larger sample of data:
-res3 <- ggplot(aug_nlme_neg4 %>% sample_n(25e3), aes(.fitted, .resid)) + 
+res_pos3 <- ggplot(aug_nlme_pos3 %>% sample_n(25e3), aes(.fitted, .resid)) + 
   ggpubr::theme_classic2() + 
   #geom_point(size=1) +
   # geom_point(alpha = 1/10) +
   geom_point(shape=1, size=2, fill='white') +
   geom_hline(yintercept = 0, color = 'red', size=1) +
   #geom_smooth(se=FALSE, color = "red") +
-  labs(x = "Fitted", y = "Residuals", title = "Parity > 3, negative") +
+  labs(x = "Fitted", y = "Residuals", title = "Parity 3, positive") +
+  ylim(-6, 6) +
+  xlim(2.5, 7) +
   theme(axis.text = element_text(size = 14),
         axis.title = element_text(size = 14)
         #,legend.position = "top"
   ) +
   NULL
 
-resid_sample <- ggarrange(res1, res4, res2, res5, res3, res6, 
-                       ncol=2, nrow=3, 
+resid_sample <- ggarrange(res_neg1, res_pos1, res_neg2, res_pos2, res_neg3, res_pos3, res_neg4, res_pos4,  
+                       ncol=2, nrow=4, 
                        common.legend = TRUE, legend="right")
 
 resid_sample
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/Figure5_Residuals.tiff", width = 40, height = 40, units = "cm", dpi=300)
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/Residuals.tiff", width = 40, height = 40, units = "cm", dpi=300)
 
 
 
@@ -206,15 +208,15 @@ qqnorm(nls_neg1, ~ resid(., type = "p"))
 
 # CI ---------------------------------------------------------------
 
-#sum_d <- 
-  ddply(all_out_nlme, c("PARITY", "PCR"), summarise,
+library(tidyverse)
+plyr::ddply(all_out_nlme, c("PARITY", "PCR"), summarise,
                N    = length(d),
                mean = mean(d),
                median = median(d),
                sd   = sd(d),
                se   = sd / sqrt(N),
-              lower = mean - qt(1 - (0.05 / 2), n - 1) * se,
-              upper = mean + qt(1 - (0.05 / 2), n - 1) * se)
+               lower = mean - qt(1 - (0.05 / 2), n - 1) * se,
+               upper = mean + qt(1 - (0.05 / 2), n - 1) * se)
 
 
 
@@ -251,4 +253,4 @@ box_param <- ggplot(nlme_out_pos4, aes(class, hwy)) +
 
 # SAVE -------------------------------------------------
 
-save.image("K:/paperI/major4/VIII_modeleval_PCR_major4.RData")
+save.image("K:/paperI/major4/resubmit.RData")

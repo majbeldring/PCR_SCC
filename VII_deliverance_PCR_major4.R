@@ -57,7 +57,7 @@ ggplot(aes(x=SCC)) +
 
 # geometric values (exp(mean(log(x)))
 # repeat for all parity groups
-df2_neg %>%
+df1_pos %>%
   summarize(min = exp(min(logSCC)),
             q1 = exp(quantile(logSCC, 0.25)),
             median = exp(median(logSCC)),
@@ -81,10 +81,19 @@ all_out_nlme %>%
   summarize(median = median(b),
             mean = mean(b))
 
+# unique animals:
+str(df1_neg)
+n_distinct(df1_pos$BES_ID)
+
+
+
 
 
 
 # PLOTTING 2-IN-1, figure 2 in paper -----------------------------------
+
+pos1_mean <- nlme_out_pos1 %>% 
+  dplyr::summarise(across(everything(), mean))
 
 
 # dashed and solid: Repeat for Parity 2,3,4
@@ -116,7 +125,7 @@ curves_all <- ggarrange(curve2, curve3, curve4,
 
 
 # Colour: Repeat for all parities. 
-curve4 <- list(pos4_mean = pos4_mean, neg4_mean = neg4_mean) %>% 
+curve1 <- list(pos1_mean = pos1_mean, neg1_mean = neg1_mean) %>% 
   enframe() %>% 
   unnest(value) %>% 
   crossing(DIM = seq_len(305)) %>% 
@@ -126,24 +135,24 @@ curve4 <- list(pos4_mean = pos4_mean, neg4_mean = neg4_mean) %>%
       geom_line(size = rel(1.5)) +
       ylim(3.5, 6.0) +
       ggpubr::theme_classic2() + 
-      labs(title = "Parity > 3", color= "PCR") + 
+      labs(title = "Parity 1", color= "PCR") + 
       theme(axis.text = element_text(size = 14),
             axis.title = element_text(size = 14),
             plot.title = element_text(hjust = 0.5),
             #legend.position="none"
             #,legend.position = "top"
       ) +
-      scale_color_discrete(breaks=c("neg4_mean", "pos4_mean"),
+      scale_color_discrete(breaks=c("neg1_mean", "pos1_mean"),
                             labels=c("NEG", "POS")) +
       geom_hline(yintercept=5.3, linetype="dashed") + #200.000 threshold
       NULL
   } 
 
-ggarrange(curve2, curve3, curve4, 
-                        ncol=1, nrow=3, 
+ggarrange(curve1, curve2, curve3, curve4, 
+                        ncol=1, nrow=4, 
                         common.legend = TRUE, legend="right")
 
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/new_curves_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/curves_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
 
 
 
@@ -216,6 +225,7 @@ ecdf_Parity2 <-
       group_by(PARITY, PCR) %>%
       filter(PARITY == 2) %>%
       ggplot(aes(k, colour = PCR)) +
+      labs(x = "c") +
       stat_ecdf(size = rel(1.5))+
       ggpubr::theme_classic2() + 
       theme(axis.text = element_text(size = 14),
@@ -232,7 +242,7 @@ ecdf_Parity2 <-
     ncol=2, nrow=2, common.legend = TRUE, legend="right")
 
 ecdf_Parity2
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/ecdf_Parity2.tiff", width = 40, height = 40, units = "cm", dpi=300)
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/ecdf_Parity2.tiff", width = 40, height = 40, units = "cm", dpi=300)
 
 # Confidence interval ---------------------------------------
 
