@@ -138,15 +138,14 @@ ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/resid_all.tiff", wi
 
 
 
+# NEW RESIDUAL DENSITY PLOT ----------------------------
 
+res <- resid(nlme_neg1)
+plot(density(res))
 
+# FIX how to do it with ggplot
 
-
-
-
-
-
-
+# ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/density_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
 
 
 

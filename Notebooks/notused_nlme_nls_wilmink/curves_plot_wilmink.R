@@ -59,7 +59,7 @@ pos2_pct %>%
   crossing(DIM = seq_len(305)) %>% 
   
   #' calculate the proper `logSCC`
-  mutate(logSCC = pmap_dbl(select(., DIM, a,b,k,d), logSCC_func)) %>% {
+  mutate(logSCC = pmap_dbl(select(., DIM, a,b,k,d), f_wilmink)) %>% {
     ggplot(., aes(DIM, logSCC)) + 
       # aes(group = BES_ID) +
       aes(group = pctile) +
@@ -91,7 +91,7 @@ neg2_pct %>%
   crossing(DIM = seq_len(305)) %>% 
   
   #' calculate the proper `logSCC`
-  mutate(logSCC = pmap_dbl(select(., DIM, a,b,k,d), logSCC_func)) %>% {
+  mutate(logSCC = pmap_dbl(select(., DIM, a,b,k,d), f_wilmink)) %>% {
     ggplot(., aes(DIM, logSCC)) + 
       # aes(group = BES_ID) +
       aes(group = pctile) +

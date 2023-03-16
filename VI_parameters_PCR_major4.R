@@ -270,7 +270,7 @@ gg_neg2 <- out_nlme_neg2 %>%
 
 # percentile curves based on wilmink:----------------------------------------------------
 
-neg2_pct <- nlme_out_neg2 %>% 
+pos4_pct <- nlme_out_pos4 %>% 
   as_tibble() %>% 
   dplyr::summarise(across(everything(), 
                    list(
@@ -292,12 +292,22 @@ curve_pct_pos4 <- pos4_pct %>%
       geom_line() +
       
       #labs(caption = "PCR negative, parity 2") +
-      ggtitle("SCC curve, pctile of parametres Wilmink: PCR POS parity 4") +
+      ggtitle("Parity 4, PCR POS. Percentiles of Wilmink Parameters") +
       #ylim(3.0, 11.0) +
       ggpubr::theme_classic2() +
+      theme(axis.text = element_text(size = 14),
+            axis.title = element_text(size = 14),
+            plot.title = element_text(hjust = 0.5),
+            #legend.position="none"
+            #,legend.position = "top"
+      ) +
       NULL
-  } %>% 
-  plotly::ggplotly()
+  } #%>% 
+  #plotly::ggplotly()
+
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/curves_pct.tiff", width = 40, height = 40, units = "cm", dpi=300)
+
+
 
 
 
@@ -307,6 +317,7 @@ curve_pct_pos4 <- pos4_pct %>%
 neg2_mean <- nlme_out_neg2 %>% 
   dplyr::summarise(across(everything(), mean))
 
+
 # curves for paper created in script VII
 curve_mean_neg2 <- neg2_mean %>% 
   #' join parameters with x-axis (`DIM`)
@@ -315,7 +326,8 @@ curve_mean_neg2 <- neg2_mean %>%
   mutate(logSCC = pmap_dbl(select(., DIM, a,b,k,d), f_wilmink)) %>% {
     ggplot(., aes(DIM, logSCC)) + 
       # aes(group = BES_ID) +
-      #aes(group = pctile) +
+      # aes(group = pctile) +
+      # aes(group = mean) +
       #aes(color = median) +
       #geom_line(size = rel(1.5), colour = "#E69F00") + # orange for POS
       geom_line(size = rel(1.5), colour = "#56B4E9") + # blue for NEG
