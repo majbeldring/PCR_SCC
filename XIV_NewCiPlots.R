@@ -5,7 +5,7 @@ library("tidyverse")
 library("nlme")
 library("pbapply")
 
-(load("Ouput_nlme.RData"))
+load("K:/paperI/major4/Ouput_nlme.RData")
 
 f_wilmink <- function(DIM, a,b,k,d){
   a + b * DIM + exp(-(exp(k)) * DIM)*d
@@ -46,6 +46,12 @@ ggplot(all_ci, aes(x=DIM, y=Estimate, ymin=LCI, ymax=UCI, col=PCR, fill=PCR)) +
   facet_wrap(~Parity)
 # Note that these 95% CI are still approximate - and I am not sure exactly how accurate they are
 
+
+
+
+
+# We use bellow for paper: -----------------------------------
+
 ## Alternative:  95% CI for farm estimates
 expand_grid(PCR = c("negative","positive"), Parity=1:4) |>
   group_by(PCR, Parity) |>
@@ -62,17 +68,27 @@ expand_grid(PCR = c("negative","positive"), Parity=1:4) |>
   bind_rows() ->
   farms_ci
 
+
+# Create a named list of labels
+labels <- c("1" = "Parity 1", "2" = "Parity 2", "3" = "Parity 3", "4" = "Parity > 3")
+cbbPalette <- c("#E69F00", "#56B4E9", "#009E73","#CC79A7", "#F0E442", "#0072B2", "#D55E00")
+
+# Use the named list of labels in facet_wrap
 ggplot(farms_ci, aes(x=DIM, y=Mean, ymin=LCI, ymax=UCI, col=PCR, fill=PCR)) +
   geom_ribbon(alpha=0.25) +
   geom_line(size = rel(1.0)) +
   geom_hline(yintercept=5.3, linetype="dashed") +
   ylim(3.0, 7.0) +
+  ylab("log(SCC)") +
+  scale_colour_manual(values=cbbPalette) +
+  scale_fill_manual(values = cbbPalette) +
+  ggpubr::theme_classic2() +
   theme(axis.text = element_text(size = 14),
         axis.title = element_text(size = 14),
         strip.text = element_text(size = 16)) +
-  facet_wrap(~Parity)
+  facet_wrap(~Parity, labeller = labeller(Parity = labels))
 # Note that these are NOT the same thing
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/new_curves.tiff", width = 40, height = 20, units = "cm", dpi=300)
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/003_Animals_Submission/Figure3_CI_curves_new.tiff", width = 40, height = 20, units = "cm", dpi=300)
 
 
 

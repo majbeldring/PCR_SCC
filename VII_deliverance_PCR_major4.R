@@ -6,8 +6,6 @@
 
 # note: nlme_wilmink4.RData should be remaked without 9999 values
 
-# missing: 2x2 tabel...
-
 
 # Packages and settings -------------------------------------
 
@@ -32,6 +30,9 @@ options(stringsAsFactors = FALSE) # prevent factorizing caracters
 load("K:/paperI/major4/VI_parameters_PCR_major4.RData")
 load("K:/paperI/major4/IV_filter_PCR_major4.RData")
 
+
+
+cbbPalette <- c("#56B4E9", "#E69F00", "#009E73","#CC79A7", "#F0E442", "#0072B2", "#D55E00")
 
 # SCC distribution  -----------------------
 
@@ -99,7 +100,7 @@ n_distinct(df1_pos$BES_ID)
 
 # PLOTTING 2-IN-1, figure 2 in paper -----------------------------------
 
-pos1_mean <- nlme_out_pos1 %>% 
+neg1_mean <- nlme_out_neg1 %>% 
   dplyr::summarise(across(everything(), mean))
 
 
@@ -159,7 +160,8 @@ ggarrange(curve1, curve2, curve3, curve4,
                         ncol=1, nrow=4, 
                         common.legend = TRUE, legend="right")
 
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/curves_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
+# ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/curves_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
+# Not used, I use the one from XIV instead
 
 
 
@@ -206,6 +208,8 @@ min_neg2 <-
 
 # ecdf plot --------------------------------------
 
+cbbPalette <- c("#E69F00", "#56B4E9", "#009E73","#CC79A7", "#F0E442", "#0072B2", "#D55E00")
+
 # here for Parity 2
 ecdf_Parity2 <-
   ggarrange( 
@@ -217,7 +221,8 @@ ecdf_Parity2 <-
       stat_ecdf(size = rel(1.5)) +
       ggpubr::theme_classic2() + 
       theme(axis.text = element_text(size = 14),
-      axis.title = element_text(size = 14)),
+      axis.title = element_text(size = 14))  +
+      scale_color_manual(values = c("#56B4E9", "#E69F00")),
     all_out_nlme %>%
       select(b, PARITY, PCR) %>%
       group_by(PARITY, PCR) %>%
@@ -226,7 +231,8 @@ ecdf_Parity2 <-
       stat_ecdf(size = rel(1.5))+
       ggpubr::theme_classic2() + 
       theme(axis.text = element_text(size = 14),
-            axis.title = element_text(size = 14)),
+            axis.title = element_text(size = 14)) +
+      scale_color_manual(values = c("#56B4E9", "#E69F00")),
     all_out_nlme %>%
       select(k, PARITY, PCR) %>%
       group_by(PARITY, PCR) %>%
@@ -236,7 +242,8 @@ ecdf_Parity2 <-
       stat_ecdf(size = rel(1.5))+
       ggpubr::theme_classic2() + 
       theme(axis.text = element_text(size = 14),
-            axis.title = element_text(size = 14)),
+            axis.title = element_text(size = 14)) +
+      scale_color_manual(values = c("#56B4E9", "#E69F00")),
     all_out_nlme %>%
       select(d, PARITY, PCR) %>%
       group_by(PARITY, PCR) %>%
@@ -245,11 +252,12 @@ ecdf_Parity2 <-
       stat_ecdf(size = rel(1.5))+
       ggpubr::theme_classic2() + 
       theme(axis.text = element_text(size = 14),
-            axis.title = element_text(size = 14)), 
+            axis.title = element_text(size = 14)) +
+      scale_color_manual(values = c("#56B4E9", "#E69F00")), 
     ncol=2, nrow=2, common.legend = TRUE, legend="right")
 
 ecdf_Parity2
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/ecdf_Parity2.tiff", width = 40, height = 40, units = "cm", dpi=300)
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/003_Animals_Submission/ecdf_Parity2.tiff", width = 40, height = 40, units = "cm", dpi=300)
 
 # Confidence interval ---------------------------------------
 

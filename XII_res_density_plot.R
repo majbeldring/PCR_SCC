@@ -16,6 +16,7 @@ library("tidyverse")
 library("nlme")
 library(gridExtra) # gridarrange
 library(broom.mixed) # augment
+library(ggpubr) # gridarrange 
 ggplot2::theme_set(ggplot2::theme_bw())  # globally sets ggplot2 theme to theme_bw
 
 (load("K:/paperI/major4/Ouput_nlme.RData"))
@@ -24,6 +25,9 @@ ggplot2::theme_set(ggplot2::theme_bw())  # globally sets ggplot2 theme to theme_
 
 
 # RESIDUALS Figure 5 paper (sample is used) -----------------------------------
+
+cbbPalette <- c("#56B4E9", "#E69F00", "#009E73","#CC79A7", "#F0E442", "#0072B2", "#D55E00")
+
 
 # test with ggplot... Only a part of the data
 broom::augment(nlme_pos1, data = df1_pos) -> 
@@ -65,17 +69,17 @@ ggplot(aug_nlme_pos4, aes(.fitted, .resid)) +
 # NEW RESIDUAL DENSITY PLOT ----------------------------
 
 
-tibble(Fitted = fitted(nlme_neg1), Residual = resid(nlme_neg1)) |>
+tibble(Fitted = fitted(nlme_pos1), Residual = resid(nlme_pos1)) |>
   mutate(Fitted = round(Fitted, 1), Residual = round(Residual, 1)) |>
   count(Fitted, Residual) |>
   ggplot(aes(x=Fitted, y=Residual, z=n)) +
   geom_contour()
 
-res1pos <- tibble(Fitted = fitted(nlme_pos1), Residual = resid(nlme_pos1)) |>
+res1neg <- tibble(Fitted = fitted(nlme_neg1), Residual = resid(nlme_neg1)) |>
   ggplot(aes(x=Fitted, y=Residual)) +
-  geom_density2d() +
-  stat_smooth(se=FALSE)  + 
-  labs(x = "Fitted", y = "Residuals", title = "Parity 1, positive") +
+  geom_density2d(color = "#56B4E9") +
+  stat_smooth(se=FALSE, color = "#56B4E9")  + 
+  labs(x = "Fitted", y = "Residuals", title = "Parity 1, negative") +
   theme(axis.text = element_text(size = 14),
         axis.title = element_text(size = 14))
 
@@ -83,7 +87,8 @@ resid_all <- ggarrange(res1neg, res1pos, res2neg, res2pos, res3neg, res3pos, res
                           ncol=2, nrow=4, 
                           common.legend = TRUE, legend="right")
 
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/new_resid.tiff", width = 40, height = 20, units = "cm", dpi=300)
+resid_all
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/003_Animals_Submission/new_resid.tiff", width = 40, height = 20, units = "cm", dpi=300)
 
 
 

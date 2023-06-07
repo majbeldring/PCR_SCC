@@ -42,14 +42,15 @@ load("K:/paperI/major4/VII_deliverance.RData") # only model output and grouped d
 # The number of quantiles is selected to match the size of your sample data
 # Use the qq quantile plot...
 
+cbbPalette <- c("#E69F00", "#56B4E9", "#009E73","#CC79A7", "#F0E442", "#0072B2", "#D55E00")
 
-# NEGATIVE: #F8766D
-# POSITIVE #00BFC4
-qq_pos1 <- ggqqplot(residuals(nlme_pos1), shape=1, 
-              xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", title = "Parity 1, positive", 
+# NEGATIVE: "#56B4E9"
+# POSITIVE "#E69F00"
+qq_neg1 <- ggqqplot(residuals(nlme_neg1), shape=1, 
+              xlab = "Theoretical Quantiles", ylab = "Sample Quantiles", title = "Parity 1, negative", 
               font.x = c(14), font.y = c(14), 
-              color = "#00BFC4")
-qq_pos1$layers[[2]]$aes_params$colour <- "black" 
+              color = "#56B4E9")
+qq_neg1$layers[[2]]$aes_params$colour <- "black" 
 #qq_neg3
 
 qq_all <- ggarrange(qq_neg1, qq_pos1, qq_neg2, qq_pos2, qq_neg3, qq_pos3, qq_neg4, qq_pos4, 
@@ -57,7 +58,7 @@ qq_all <- ggarrange(qq_neg1, qq_pos1, qq_neg2, qq_pos2, qq_neg3, qq_pos3, qq_neg
                     common.legend = TRUE, legend="right")
 qq_all
 
-ggsave("C:/Users/zjt234/PhD/PaperI_PCR/002_pvm_submission_revised/qq_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
+ggsave("C:/Users/zjt234/PhD/PaperI_PCR/003_Animals_Submission/qq_all.tiff", width = 40, height = 40, units = "cm", dpi=300)
 #ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/qq_all.pdf")
 #ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/qq_neg2.tiff", width = 40, height = 40, units = "cm", dpi=300)
 #ggsave("C:/Users/zjt234/PhD/PaperI_PCR_Wilmink/final_figures/qq_neg2.pdf")

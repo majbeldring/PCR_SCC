@@ -249,7 +249,7 @@ df8 <- df7 %>%
   arrange(DYR_ID, KONTROLDATO, desc(TEAT_DATE)) %>%
   distinct(DYR_ID, KONTROLDATO, .keep_all = TRUE)
 
-#convert all NA's in TEAT_TREAT to 0 (0= NOT PCR tested)
+#convert all NA's in TEAT_TREAT to 0 (0= NOT TEat treated, or a treat treat not registered)
 df8$TEAT_TREAT = factor(df8$TEAT_TREAT, levels=c(levels(df8$TEAT_TREAT), 0))
 df8$TEAT_TREAT[is.na(df8$TEAT_TREAT)] = 0
 

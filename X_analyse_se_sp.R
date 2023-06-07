@@ -4,7 +4,7 @@ library("tidyverse")
 library("nlme")
 library("pbapply")
 
-(load("K:/paperI/major4/Ouput_nlme.RData"))
+load("K:/paperI/major4/Ouput_nlme.RData")
 
 ## Merging conditional modes:
 expand_grid(PCR = c("negative","positive"), Parity=1:4) |>
